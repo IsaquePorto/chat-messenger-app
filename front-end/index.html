@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -11,11 +12,13 @@
 
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-    <h1>UOL 2.0</h1>
+    <h1>UOL 2.1-(SNAPSHOT)</h1>
 
     <form action="" id="chat">
         <input type="text" name="username" placeholder="Type your username">
+        <input type="text" name="destiny" placeholder="Type name of your destinatary">
         <div class="messages"></div>
         <input type="text" name="message" placeholder="Type your message">
         <button type="submit">Submit</button>
@@ -25,23 +28,31 @@
         var socket = io('http://localhost:3000')
 
         function renderMessage(message) {
-            $('.messages').append('<div class= "message"><strong>'+message.author+'</strong>:'+message.message+' </div>')
+            var usuario = $('input[name=username]').val()
+            if (usuario === message.destiny) {
+                $('.messages').append('<div class= "message private-message"><strong>' + message.author + '</strong>:' + message.message + ' </div>')
+            }
+           if(!message.destiny) {
+                $('.messages').append('<div class= "message"><strong>' + message.author + '</strong>:' + message.message + ' </div>')
+            }
         }
 
-        socket.on('receivedMessage', function(message) {
+        socket.on('receivedMessage', function (message) {
             renderMessage(message);
         })
 
-        $('#chat').submit(function(event) {
+        $('#chat').submit(function (event) {
             event.preventDefault();
 
             var author = $('input[name=username]').val()
             var message = $('input[name=message]').val()
+            var destiny = $('input[name=destiny]').val()
 
-            if(author.length && message.length){
+            if (author.length && message.length) {
                 var messageObject = {
-                    author : author,
-                    message : message
+                    author: author,
+                    message: message,
+                    destiny: destiny
                 }
 
                 renderMessage(messageObject);
@@ -51,4 +62,5 @@
         })
     </script>
 </body>
+
 </html>
