@@ -1,10 +1,11 @@
 const express = require('express');
-const path = require('path')
+const path = require('path');
+const axios = require('axios');
 
 const app = express();
 const server = require('http').createServer(app);
 
-const io = require('socket.io')(server)
+const io = require('socket.io')(server);
 
 app.use(express.static(path.join('../', 'front-end')))
 app.set('views', path.join('../', 'front-end'))
@@ -22,11 +23,13 @@ io.on('connection', socket => {
     console.log(`Socket conectado: ${socket.id}`)
 
     socket.on('sendMessage', data => {
-         console.log(data)
+        console.log(data)
 
-         messages.push(data)
+        messages.push(data);
 
-         socket.broadcast.emit('receivedMessage', data)
+    axios.post('http://localhost:8080', data);
+
+    socket.broadcast.emit('receivedMessage', data)
     })
 })
 
