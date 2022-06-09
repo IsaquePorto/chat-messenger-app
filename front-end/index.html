@@ -52,8 +52,17 @@
                 var messageObject = {
                     author: author,
                     message: message,
-                    destiny: destiny
+                    destiny: destiny,
+                    isPrivate: !!destiny
                 }
+
+                await fetch('url', {
+                    method: 'POST',
+                    body: message,
+                    headers: {
+                    'Content-Type': 'application/json'
+                    }
+                });
 
                 renderMessage(messageObject);
 
